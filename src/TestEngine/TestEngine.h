@@ -9,6 +9,8 @@ In order to compile you need to create these functions:
     bool Init(int argc, char **argv) : This function is called before the window initialization.
     bool Update(void) : This function is called before the draw operation.
     void Destory(void) : This function is called before program exit.
+
+For all functions returning a bool returning true means that the engine can continue. While false means the engine should stop.
 */
 
 typedef enum KeyCode
@@ -77,6 +79,13 @@ typedef struct MouseState
 	bool xButton2;
 } MouseState;
 
+typedef struct Canvas
+{
+    uint32_t *pixels;
+    int width;
+    int height;
+} Canvas;
+
 void SetWindowSize(int width, int height);
 void SetWindowTitle(char *title);
 void SetFrameRate(int desiredFPS);
@@ -88,5 +97,16 @@ void GetMouseState(MouseState *mouseState);
 void SetCursorPosition(int x, int y);
 void LockCursor(void);
 void UnlockCursor(void);
+Canvas *GetCanvas(void);
+
+static inline uint32_t FColor(float a, float r, float g, float b)
+{
+	return (((uint32_t)((a * 255.0f) + 0.5f)) << 24) | (((uint32_t)((r * 255.0f) + 0.5f)) << 16) | (((uint32_t)((g * 255.0f) + 0.5f)) << 8) | (((uint32_t)((b * 255.0f) + 0.5f)));
+}
+
+static inline uint32_t IColor(uint8_t a, uint8_t r, uint8_t g, uint8_t b)
+{
+	return (a << 24) | (r << 16) | (g << 8) | b;
+}
 
 #endif

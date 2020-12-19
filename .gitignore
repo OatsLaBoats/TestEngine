@@ -3,3 +3,4 @@
 build.cmd
 OBGBUILD
 run.cmd
+test.c

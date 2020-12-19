@@ -8,15 +8,8 @@
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "gdi32.lib")
 
-typedef struct Canvas
-{
-    uint32_t *pixels;
-    int width;
-    int height;
-} Canvas;
-
 bool Init(int argc, char **argv);
-bool Update(void);
+bool Update(float elapsedTime);
 void Destroy(void);
 
 static WNDCLASSEX windowClass;
@@ -142,7 +135,7 @@ int main(int argc, char **argv)
     canvas.height = 500;
     canvas.width = 750;
 
-    if(Init(argc, argv))
+    if(!Init(argc, argv))
     {
         fprintf(stderr, "Failed user initialization.\n");
         return 1;
@@ -188,6 +181,7 @@ int main(int argc, char **argv)
 
     int frameCount = 0;
     float totalFrames = 0.0f;
+    float elapsedTime = 0.0f;
 
     float frameStart = GetElapsedTime();
     while(engineIsRunning)
@@ -199,7 +193,7 @@ int main(int argc, char **argv)
             DispatchMessage(&message);
         }
 
-        if(Update())
+        if(!Update(elapsedTime))
         {
             engineIsRunning = false;
         }
@@ -211,6 +205,7 @@ int main(int argc, char **argv)
 
         float afterFrame = GetElapsedTime();
         float elapsedSeconds = (afterFrame - frameStart) / 1000.0f;
+        float elapsedTime = afterFrame - frameStart;
         
         frameStart = afterFrame; //updating frame start for next frame/
         
@@ -328,4 +323,9 @@ void UnlockCursor(void)
         fprintf(stderr, "Failed to unclip cursor.\n");
         return;
     }
+}
+
+Canvas *GetCanvas(void)
+{
+    return &canvas;
 }
