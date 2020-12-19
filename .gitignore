@@ -1,0 +1,5 @@
+/.vscode/
+/build/
+build.cmd
+OBGBUILD
+run.cmd
