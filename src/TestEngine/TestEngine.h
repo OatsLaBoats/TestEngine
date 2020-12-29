@@ -13,6 +13,14 @@ In order to compile you need to create these functions:
 For all functions returning a bool returning true means that the engine can continue. While false means the engine should stop.
 */
 
+#define COLOR_WHITE (Color){.rgb = 0xFFFFFFFF}
+#define COLOR_BLACK (Color){.rgb = 0xFF000000}
+#define COLOR_RED (Color){.rgb = 0xFFFF0000}
+#define COLOR_GREEN (Color){.rgb = 0xFF00FF00}
+#define COLOR_BLUE (Color){.rgb = 0xFF0000FF}
+#define COLOR_YELLOW (Color){.rgb = 0xFFFFFF00}
+#define COLOR_VIOLET (Color){.rgb = 0xFFFF00FF}
+
 typedef enum KeyCode
 {
 	KEY_BACKSPACE = 0x08,
@@ -86,12 +94,24 @@ typedef struct Canvas
     int height;
 } Canvas;
 
+typedef union Color
+{
+	uint32_t rgb;
+
+	struct
+	{
+		uint8_t a;
+		uint8_t r;
+		uint8_t g;
+		uint8_t b;
+	};
+} Color;
+
 void SetWindowSize(int width, int height);
 void SetWindowTitle(char *title);
 void SetFrameRate(int desiredFPS);
 
-void ExitEngine(void);
-void DrawPixel(uint32_t x, uint32_t y, uint32_t color);
+void StopEngine(void);
 bool IsKeyDown(uint32_t keyCode);
 void GetMouseState(MouseState *mouseState);
 void SetCursorPosition(int x, int y);
@@ -99,14 +119,29 @@ void LockCursor(void);
 void UnlockCursor(void);
 Canvas *GetCanvas(void);
 
-static inline uint32_t FColor(float a, float r, float g, float b)
+void DrawPixel(uint32_t x, uint32_t y, Color color);
+void Clear(Color color);
+
+static inline Color FColor(float a, float r, float g, float b)
 {
-	return (((uint32_t)((a * 255.0f) + 0.5f)) << 24) | (((uint32_t)((r * 255.0f) + 0.5f)) << 16) | (((uint32_t)((g * 255.0f) + 0.5f)) << 8) | (((uint32_t)((b * 255.0f) + 0.5f)));
+	Color color;
+	color.a = (uint8_t)(a * 255.0f);
+	color.r = (uint8_t)(r * 255.0f);
+	color.g = (uint8_t)(g * 255.0f);
+	color.b = (uint8_t)(b * 255.0f);
+	
+	return color;
 }
 
 static inline uint32_t IColor(uint8_t a, uint8_t r, uint8_t g, uint8_t b)
 {
-	return (a << 24) | (r << 16) | (g << 8) | b;
+	Color color;
+	color.a = a;
+	color.r = r;
+	color.g = g;
+	color.b = b;
+
+	return color;
 }
 
 #endif

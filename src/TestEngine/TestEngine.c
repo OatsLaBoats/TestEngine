@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "winmm.lib")
@@ -95,7 +96,9 @@ static void InitCanvas(void)
     bmi.bmiHeader.biBitCount = 32;
     bmi.bmiHeader.biCompression = BI_RGB;
 
-    canvas.pixels = calloc(1, canvas.width * canvas.height * sizeof(*canvas.pixels));
+    uint32_t size = canvas.width * canvas.height * sizeof(*canvas.pixels);
+    canvas.pixels = malloc(size);
+    memset(canvas.pixels, 0, size);
 }
 
 static void DrawFrame(void)
@@ -205,7 +208,7 @@ int main(int argc, char **argv)
 
         float afterFrame = GetElapsedTime();
         float elapsedSeconds = (afterFrame - frameStart) / 1000.0f;
-        float elapsedTime = afterFrame - frameStart;
+        elapsedTime = afterFrame - frameStart;
         
         frameStart = afterFrame; //updating frame start for next frame/
         
@@ -249,17 +252,29 @@ void SetFrameRate(int desiredFPS)
     frameRate = desiredFPS;
 }
 
-void ExitEngine(void)
+void StopEngine(void)
 {
     engineIsRunning = false;
 }
 
-void DrawPixel(uint32_t x, uint32_t y, uint32_t color)
+void DrawPixel(uint32_t x, uint32_t y, Color color)
 {
     x = LimitMaxU32(x, canvas.width - 1);
     y = LimitMaxU32(y, canvas.height - 1);
 
-    canvas.pixels[y * canvas.width + x] = color;
+    canvas.pixels[y * canvas.width + x] = color.rgb;
+}
+
+void Clear(Color color)
+{
+    uint32_t *pixels = canvas.pixels;
+    int size = canvas.height * canvas.width;
+
+    for(int i = 0; i < size; ++i)
+    {
+        *pixels = color.rgb;
+        ++pixels;
+    }
 }
 
 bool IsKeyDown(uint32_t keyCode)
