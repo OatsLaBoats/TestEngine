@@ -13,13 +13,13 @@ In order to compile you need to create these functions:
 For all functions returning a bool returning true means that the engine can continue. While false means the engine should stop.
 */
 
-#define COLOR_WHITE (Color){.rgb = 0xFFFFFFFF}
-#define COLOR_BLACK (Color){.rgb = 0xFF000000}
-#define COLOR_RED (Color){.rgb = 0xFFFF0000}
-#define COLOR_GREEN (Color){.rgb = 0xFF00FF00}
-#define COLOR_BLUE (Color){.rgb = 0xFF0000FF}
-#define COLOR_YELLOW (Color){.rgb = 0xFFFFFF00}
-#define COLOR_VIOLET (Color){.rgb = 0xFFFF00FF}
+#define COLOR_WHITE ((Color){.rgb = 0xFFFFFFFF})
+#define COLOR_BLACK ((Color){.rgb = 0xFF000000})
+#define COLOR_RED ((Color){.rgb = 0xFFFF0000})
+#define COLOR_GREEN ((Color){.rgb = 0xFF00FF00})
+#define COLOR_BLUE ((Color){.rgb = 0xFF0000FF})
+#define COLOR_YELLOW ((Color){.rgb = 0xFFFFFF00})
+#define COLOR_VIOLET ((Color){.rgb = 0xFFFF00FF})
 
 typedef enum KeyCode
 {
@@ -133,7 +133,7 @@ static inline Color FColor(float a, float r, float g, float b)
 	return color;
 }
 
-static inline uint32_t IColor(uint8_t a, uint8_t r, uint8_t g, uint8_t b)
+static inline Color IColor(uint8_t a, uint8_t r, uint8_t g, uint8_t b)
 {
 	Color color;
 	color.a = a;
